@@ -5,13 +5,23 @@ function normalize(s) {
 function stripMd(s) {
   // remove marcações simples (mantém texto)
   return String(s ?? "")
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/^\s*---+\s*$/gm, "")
     .replace(/^\s*-\s+/gm, "- ")
     .replace(/\s+$/gm, "")
     .trim();
 }
 
+function isDivider(line) {
+  return /^\s*---+\s*$/.test(String(line ?? ""));
+}
+
 function linesToBullets(block) {
-  const lines = normalize(block).split("\n").map(l => l.trim()).filter(Boolean);
+  const lines = normalize(block)
+    .split("\n")
+    .map(l => l.trim())
+    .filter(Boolean)
+    .filter(l => !isDivider(l));
   const out = [];
   for (const l of lines) {
     if (l.startsWith("- ")) out.push(stripMd(l.slice(2)));
@@ -40,10 +50,16 @@ function parseNumberedFlow(block) {
 
   for (const raw of lines) {
     const line = raw.replace(/\s+$/g, "");
+    if (isDivider(line)) continue;
     const m = line.match(/^\s*\d+\.\s+(.+?)\s*$/);
     if (m) {
       flush();
-      cur = { stage: stripMd(m[1]), bullets: [] };
+      const value = stripMd(m[1]);
+      const parts = value.split(/:\s+(.+)/);
+      cur = {
+        stage: stripMd(parts[0] || value),
+        bullets: parts[1] ? [stripMd(parts[1])] : []
+      };
       continue;
     }
     const b = line.match(/^\s*-\s+(.+?)\s*$/);
@@ -75,6 +91,7 @@ function parseReferences(block) {
   };
 
   for (const line of lines) {
+    if (isDivider(line)) continue;
     const h = line.match(/^\s*###\s+(.+?)\s*$/);
     if (h) {
       start(stripMd(h[1]));
@@ -119,6 +136,7 @@ function parseMapaBiblia(block) {
   };
 
   for (const line of lines) {
+    if (isDivider(line)) continue;
     const h = line.match(/^\s*###\s+(.+?)\s*$/);
     if (h) {
       flush();
@@ -150,10 +168,16 @@ function parsePanorama(block) {
 
   for (const raw of lines) {
     const line = raw.replace(/\s+$/g, "");
+    if (isDivider(line)) continue;
     const h = line.match(/^\s*\d+\)\s+(.+?)\s*$/);
     if (h) {
       flush();
-      cur = { title: stripMd(h[1]), bullets: [] };
+      const value = stripMd(h[1]);
+      const parts = value.split(/:\s+(.+)/);
+      cur = {
+        title: stripMd(parts[0] || value),
+        bullets: parts[1] ? [stripMd(parts[1])] : []
+      };
       continue;
     }
     const b = line.match(/^\s*-\s+(.+?)\s*$/);
@@ -168,6 +192,7 @@ function parseQuestions(block) {
   const lines = normalize(block).split("\n");
   const q = [];
   for (const l of lines) {
+    if (isDivider(l)) continue;
     const m = l.match(/^\s*\d+\.\s+(.+?)\s*$/);
     if (m) q.push(stripMd(m[1]));
   }
@@ -202,17 +227,32 @@ function parseActionsAndPrayer(block) {
 }
 
 function splitSections(md) {
-  // captura "## 1) ..." até o próximo "##"
   const text = normalize(md);
   const titleMatch = text.match(/^#\s+(.+?)\s*$/m);
   const docTitle = titleMatch ? stripMd(titleMatch[1]) : "Resumo";
-
-  const sectionRegex = /^##\s+(.+?)\s*\n([\s\S]*?)(?=^##\s+|\Z)/gm;
   const sections = [];
-  let m;
-  while ((m = sectionRegex.exec(text)) !== null) {
-    sections.push({ heading: stripMd(m[1]), body: stripMd(m[2]) });
+  const lines = text.split("\n");
+  let current = null;
+
+  const flush = () => {
+    if (!current) return;
+    sections.push({
+      heading: stripMd(current.heading),
+      body: stripMd(current.body.join("\n"))
+    });
+  };
+
+  for (const line of lines) {
+    const sectionMatch = line.match(/^##\s+(.+?)\s*$/);
+    if (sectionMatch) {
+      flush();
+      current = { heading: sectionMatch[1], body: [] };
+      continue;
+    }
+    if (current) current.body.push(line);
   }
+
+  flush();
   return { docTitle, sections };
 }
 

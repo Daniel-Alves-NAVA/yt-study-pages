@@ -1,453 +1,478 @@
 function escapeHtml(str) {
-    return String(str ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-  
-  function renderBullets(items) {
-    if (!Array.isArray(items) || items.length === 0) return `<p class="muted">—</p>`;
-    return `<ul class="list">${items.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
-  }
-  
-  function pageShell({ title, content, relativeBase }) {
-    return `<!doctype html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <title>${escapeHtml(title)}</title>
-    <link rel="stylesheet" href="${relativeBase}assets/styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      ${content}
-      <div class="footer">Gerado automaticamente • ${new Date().toISOString().slice(0,10)}</div>
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderBullets(items) {
+  if (!Array.isArray(items) || items.length === 0) return `<p class="muted">—</p>`;
+  return `<ul class="list">${items.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+}
+
+function renderParagraph(text) {
+  const t = String(text ?? "").trim();
+  if (!t) return `<p class="muted">—</p>`;
+  const ps = t.split("\n").map(p => p.trim()).filter(Boolean);
+  return ps.map(p => `<p>${escapeHtml(p)}</p>`).join("");
+}
+
+function renderMetaPills(meta = {}) {
+  const pills = [meta.category, meta.series, meta.displayDate].filter(Boolean);
+  if (pills.length === 0) return "";
+  return `<div class="meta-pills">${pills.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
+}
+
+function pageShell({ title, content, relativeBase, script = "" }) {
+  return `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>${escapeHtml(title)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="${relativeBase}assets/styles.css" />
+</head>
+<body>
+  <div class="page-glow page-glow-a"></div>
+  <div class="page-glow page-glow-b"></div>
+  <div class="container">
+    ${content}
+    <div class="footer">Gerado automaticamente • ${new Date().toISOString().slice(0, 10)}</div>
+  </div>
+  ${script ? `<script>${script}</script>` : ""}
+</body>
+</html>`;
+}
+
+function topbar({ relativeBase, badge = "Colecao", actionLabel = "Voltar", actionHref = "index.html" }) {
+  return `
+  <div class="topbar">
+    <div class="brand">
+      <a href="${relativeBase}index.html" class="brand-link">Reader</a>
+      <span class="badge">${escapeHtml(badge)}</span>
     </div>
-  </body>
-  </html>`;
-  }
-  
-  function renderTopbar({ relativeBase, slug }) {
-    return `
-    <div class="topbar">
-      <div class="brand">
-        <a href="${relativeBase}index.html" class="brand">📚 Study Pages</a>
-        <span class="badge">${escapeHtml(slug)}</span>
-      </div>
-      <div class="actions">
-        <button class="btn" id="toggle-study" type="button">Modo estudo: OFF</button>
-        <button class="btn" id="toggle-answers" type="button">Revelar: ON</button>
-        <button class="btn" id="mark-done" type="button">Marcar como estudado</button>
-      </div>
-    </div>`;
-  }
-  
-  // Técnicas: active recall / efeito de geração (input antes de revelar)
-  function recallBox({ id, prompt, placeholder = "Escreva sua resposta (fica salva no navegador)..." }) {
-    return `
-    <div class="recall">
-      <div class="recall-head">
-        <strong>✍️ Tente responder antes de ver</strong>
-        <span class="muted">${escapeHtml(prompt)}</span>
-      </div>
-      <textarea class="recall-input" data-recall-id="${escapeHtml(id)}" rows="3" placeholder="${escapeHtml(placeholder)}"></textarea>
-      <div class="recall-actions">
-        <button class="btn" type="button" data-recall-save="${escapeHtml(id)}">Salvar</button>
-        <button class="btn" type="button" data-recall-clear="${escapeHtml(id)}">Limpar</button>
-      </div>
-    </div>`;
-  }
-  
-  function qaCard({ q, a, id }) {
-    return `
-    <div class="qa">
-      <div class="q">
-        <strong>❓ ${escapeHtml(q)}</strong>
-        <button class="btn" type="button" data-toggle-answer="${escapeHtml(id)}">Toggle</button>
-      </div>
-      <div class="answer" data-answer data-answer-id="${escapeHtml(id)}">
-        ${a ? escapeHtml(a) : `<span class="muted">Sem gabarito (use sua resposta e marque “acertou/quase/errei”).</span>`}
-      </div>
-      ${recallBox({ id: "qa:" + id, prompt: "Responda sem olhar." })}
+    <div class="actions">
+      <a class="btn btn-ghost" href="${relativeBase}${escapeHtml(actionHref)}">${escapeHtml(actionLabel)}</a>
     </div>
-    `;
-  }
-  
-  function renderClientScript({ slug }) {
-    return `
-  <script>
-  (() => {
-    const slug = ${JSON.stringify(slug)};
-    const KEY_DONE = "study:done:" + slug;
-    const KEY_STUDY = "study:mode";
-    const KEY_REVEAL = "study:reveal"; // answers/details visible
-  
-    const btnStudy = document.getElementById("toggle-study");
-    const btnReveal = document.getElementById("toggle-answers");
-    const btnDone = document.getElementById("mark-done");
-  
-    const applyStudy = (on) => {
-      document.documentElement.dataset.study = on ? "1" : "0";
-      btnStudy.textContent = "Modo estudo: " + (on ? "ON" : "OFF");
-    };
-  
-    const applyReveal = (on) => {
-      document.documentElement.dataset.reveal = on ? "1" : "0";
-      btnReveal.textContent = "Revelar: " + (on ? "ON" : "OFF");
-  
-      // Answers
-      document.querySelectorAll("[data-answer]").forEach(el => {
-        el.classList.toggle("hidden", !on);
-      });
-  
-      // Blocks that should hide in study mode (teachings/reflections/prayer)
-      document.querySelectorAll("[data-hide-when-study]").forEach(el => {
-        // se estiver em modo estudo, esconder; caso contrário respeitar reveal
-        const study = document.documentElement.dataset.study === "1";
-        el.classList.toggle("hidden", study);
-      });
-  
-      // Teaching blocks can be tied to reveal too
-      document.querySelectorAll("[data-teaching]").forEach(el => {
-        const study = document.documentElement.dataset.study === "1";
-        el.classList.toggle("hidden", study ? true : !on);
-      });
-    };
-  
-    const applyDone = () => {
-      const done = localStorage.getItem(KEY_DONE) === "1";
-      btnDone.textContent = done ? "Estudado ✓" : "Marcar como estudado";
-      btnDone.style.opacity = done ? "0.85" : "1";
-    };
-  
-    // init
-    applyStudy(localStorage.getItem(KEY_STUDY) === "1");
-    const revealDefault = localStorage.getItem(KEY_REVEAL);
-    applyReveal(revealDefault === null ? true : revealDefault === "1");
-    applyDone();
-  
-    btnStudy?.addEventListener("click", () => {
-      const next = !(localStorage.getItem(KEY_STUDY) === "1");
-      localStorage.setItem(KEY_STUDY, next ? "1" : "0");
-      applyStudy(next);
-      // reapply to enforce hiding blocks
-      const reveal = (localStorage.getItem(KEY_REVEAL) ?? "1") === "1";
-      applyReveal(reveal);
-    });
-  
-    btnReveal?.addEventListener("click", () => {
-      const next = (localStorage.getItem(KEY_REVEAL) ?? "1") === "0";
-      localStorage.setItem(KEY_REVEAL, next ? "1" : "0");
-      applyReveal(next);
-    });
-  
-    btnDone?.addEventListener("click", () => {
-      const done = localStorage.getItem(KEY_DONE) === "1";
-      localStorage.setItem(KEY_DONE, done ? "0" : "1");
-      applyDone();
-    });
-  
-    // Toggle individual answers
-    document.querySelectorAll("[data-toggle-answer]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-toggle-answer");
-        const ans = document.querySelector('[data-answer-id="' + id + '"]');
-        if (!ans) return;
-        ans.classList.toggle("hidden");
-      });
-    });
-  
-    // Recall inputs (efeito de geração)
-    const loadRecall = (id) => localStorage.getItem("study:recall:" + slug + ":" + id) || "";
-    const saveRecall = (id, val) => localStorage.setItem("study:recall:" + slug + ":" + id, val);
-  
-    document.querySelectorAll("[data-recall-id]").forEach(el => {
-      const id = el.getAttribute("data-recall-id");
-      el.value = loadRecall(id);
-      el.addEventListener("change", () => saveRecall(id, el.value));
-    });
-  
-    document.querySelectorAll("[data-recall-save]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-recall-save");
-        const el = document.querySelector('[data-recall-id="' + id + '"]');
-        if (!el) return;
-        saveRecall(id, el.value);
-      });
-    });
-  
-    document.querySelectorAll("[data-recall-clear]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-recall-clear");
-        const el = document.querySelector('[data-recall-id="' + id + '"]');
-        if (!el) return;
-        el.value = "";
-        saveRecall(id, "");
-      });
-    });
-  
-    // Checklist (aplicações/ações)
-    document.querySelectorAll("[data-check-id]").forEach(box => {
-      const id = box.getAttribute("data-check-id");
-      const key = "study:check:" + slug + ":" + id;
-      box.checked = localStorage.getItem(key) === "1";
-      box.addEventListener("change", () => {
-        localStorage.setItem(key, box.checked ? "1" : "0");
-      });
-    });
-  })();
-  </script>
-  `;
-  }
-  
-  function videoPage({ data, slug }) {
-    const title = data.title || slug;
-  
-    // 1) Texto-base
-    const textoBase = renderBullets(data.texto_base);
-  
-    // 2) Referências
-    const refs = data.referencias || { confirmadas: [], citadas_nao_explicadas: [], implicitas: [] };
-  
-    // 4) Fluxo
-    const fluxo = Array.isArray(data.fluxo) && data.fluxo.length
-      ? `<div class="timeline">
-          ${data.fluxo.map((x, i) => `
-            <div class="step">
-              <div class="step-title">${escapeHtml(x.stage || ("Etapa " + (i+1)))}</div>
-              ${renderBullets(x.bullets || [])}
-              ${recallBox({ id: "fluxo:" + i, prompt: "Antes de ver/relêr: qual a ideia central desta etapa?" })}
-            </div>
-          `).join("")}
-        </div>`
-      : `<p class="muted">—</p>`;
-  
-    // 5) Mapa Bíblia → Sermão
-    const mapa = Array.isArray(data.mapa_biblia_sermao) ? data.mapa_biblia_sermao : [];
-    const mapaHtml = mapa.length
-      ? mapa.map((p, i) => `
-        <div class="section">
-          <h3>${escapeHtml(p.title || ("Ponto " + (i+1)))}</h3>
-          <div class="grid two">
-            <div class="card">
-              <h2>📍 Âncora</h2>
-              <p>${escapeHtml(p.ancora || "—")}</p>
-            </div>
-            <div class="card">
-              <h2>🧾 Evidência</h2>
-              <p>${escapeHtml(p.evidencia || "—")}</p>
-            </div>
+  </div>`;
+}
+
+function toc(items) {
+  return `
+  <nav class="card toc" aria-label="Sumário do resumo">
+    <div class="card-eyebrow">Navegação</div>
+    <div class="toc-title">Percurso de leitura</div>
+    <div class="toc-grid">
+      ${items.map(([id, label]) => `<a class="toc-link" href="#${id}" data-section-link="${id}">${escapeHtml(label)}</a>`).join("")}
+    </div>
+  </nav>`;
+}
+
+function section({ id, title, bodyHtml, tone = "" }) {
+  const toneClass = tone ? ` section-${tone}` : "";
+  return `
+  <section class="card section${toneClass}" id="${escapeHtml(id)}" data-section="${escapeHtml(id)}">
+    <h2>${escapeHtml(title)}</h2>
+    ${bodyHtml}
+  </section>`;
+}
+
+function statsBar(data, refs) {
+  const cards = [
+    { label: "Texto-base", value: data.texto_base?.length || 0 },
+    { label: "Referências", value: refs.confirmadas?.length || 0 },
+    { label: "Aplicações", value: data.aplicacoes?.length || 0 },
+    { label: "Perguntas", value: data.perguntas?.length || 0 }
+  ];
+
+  return `
+  <div class="stats-grid">
+    ${cards.map(card => `
+      <div class="stat-card">
+        <div class="stat-value">${escapeHtml(card.value)}</div>
+        <div class="stat-label">${escapeHtml(card.label)}</div>
+      </div>
+    `).join("")}
+  </div>`;
+}
+
+function heroSummary(data) {
+  const highlights = [
+    data.tese ? `<div class="hero-note"><strong>Tese:</strong> ${escapeHtml(data.tese)}</div>` : "",
+    data.aplicacoes?.[0] ? `<div class="hero-note"><strong>Primeira aplicação:</strong> ${escapeHtml(data.aplicacoes[0])}</div>` : ""
+  ].filter(Boolean).join("");
+
+  return highlights ? `<div class="hero-notes">${highlights}</div>` : "";
+}
+
+function readingScript() {
+  return `
+const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
+const sections = Array.from(document.querySelectorAll("[data-section]"));
+const progressBar = document.querySelector("[data-reading-progress]");
+const backToTop = document.querySelector("[data-back-to-top]");
+
+function updateProgress() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const doc = document.documentElement;
+  const max = doc.scrollHeight - window.innerHeight;
+  const pct = max > 0 ? Math.min(100, Math.max(0, (scrollTop / max) * 100)) : 0;
+  if (progressBar) progressBar.style.width = pct + "%";
+  if (backToTop) backToTop.hidden = pct < 18;
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const id = entry.target.getAttribute("data-section");
+    sectionLinks.forEach(link => link.classList.toggle("is-active", link.getAttribute("data-section-link") === id));
+  });
+}, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
+
+sections.forEach(section => observer.observe(section));
+window.addEventListener("scroll", updateProgress, { passive: true });
+window.addEventListener("resize", updateProgress);
+updateProgress();
+
+if (backToTop) {
+  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+}
+`;
+}
+
+function indexScript() {
+  return `
+const searchInput = document.querySelector("[data-search]");
+const sortSelect = document.querySelector("[data-sort]");
+const filterSelect = document.querySelector("[data-filter]");
+const list = document.querySelector("[data-list]");
+const empty = document.querySelector("[data-empty]");
+const count = document.querySelector("[data-count]");
+
+function getCards() {
+  return Array.from(list.querySelectorAll("[data-item]"));
+}
+
+function normalize(value) {
+  return (value || "").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+}
+
+function applyState() {
+  const term = normalize(searchInput.value);
+  const filter = filterSelect.value;
+  const sort = sortSelect.value;
+  const cards = getCards();
+
+  cards.forEach(card => {
+    const haystack = normalize(card.dataset.search);
+    const category = card.dataset.category || "";
+    const visible = (!term || haystack.includes(term)) && (!filter || category === filter);
+    card.hidden = !visible;
+  });
+
+  const visibleCards = cards.filter(card => !card.hidden);
+  visibleCards.sort((a, b) => {
+    if (sort === "title-asc") return a.dataset.title.localeCompare(b.dataset.title, "pt-BR");
+    if (sort === "title-desc") return b.dataset.title.localeCompare(a.dataset.title, "pt-BR");
+    return Number(b.dataset.sortDate || 0) - Number(a.dataset.sortDate || 0);
+  }).forEach(card => list.appendChild(card));
+
+  count.textContent = String(visibleCards.length);
+  empty.hidden = visibleCards.length !== 0;
+}
+
+[searchInput, sortSelect, filterSelect].forEach(node => node.addEventListener("input", applyState));
+applyState();
+`;
+}
+
+function videoPage({ data, slug }) {
+  const title = data.title || slug;
+  const meta = data.meta || {};
+  const refs = data.referencias || { confirmadas: [], citadas_nao_explicadas: [], implicitas: [] };
+  const tocItems = [
+    ["texto-base", "Texto-base"],
+    ["referencias", "Referências"],
+    ["tese", "Tese central"],
+    ["fluxo", "Fluxo da mensagem"],
+    ["mapa", "Mapa Bíblia → Sermão"],
+    ["panorama", "Panorama histórico"],
+    ["aplicacoes", "Aplicações práticas"],
+    ["alertas", "Alertas / pendências"],
+    ["perguntas", "Perguntas para revisão"],
+    ["leituras", "Leituras complementares"],
+    ["reflexoes", "Reflexões / ações / oração"]
+  ];
+
+  const fluxoHtml = Array.isArray(data.fluxo) && data.fluxo.length
+    ? `<div class="flow">
+        ${data.fluxo.map((x, i) => `
+          <div class="flow-item">
+            <div class="flow-step">Etapa ${i + 1}</div>
+            <div class="flow-title">${escapeHtml(x.stage || ("Etapa " + (i + 1)))}</div>
+            ${renderBullets(x.bullets || [])}
           </div>
-  
-          ${recallBox({ id: "ensino:" + i, prompt: "Tente formular o ENSINO a partir da Âncora + Evidência." })}
-  
-          <div class="card hidden" data-teaching>
-            <h2>🧠 Ensino (revelar)</h2>
-            <p>${escapeHtml(p.ensino || "—")}</p>
+        `).join("")}
+      </div>`
+    : `<p class="muted">—</p>`;
+
+  const mapa = Array.isArray(data.mapa_biblia_sermao) ? data.mapa_biblia_sermao : [];
+  const mapaHtml = mapa.length
+    ? `<div class="mapa-stack">${mapa.map((p, i) => `
+      <article class="mapa-item">
+        <div class="card-eyebrow">Ponto ${i + 1}</div>
+        <h3>${escapeHtml(p.title || ("Ponto " + (i + 1)))}</h3>
+        <div class="mapa-grid">
+          <div class="mini-card">
+            <div class="mini-label">Âncora</div>
+            <div class="mini-text">${escapeHtml(p.ancora || "—")}</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Evidência</div>
+            <div class="mini-text">${escapeHtml(p.evidencia || "—")}</div>
           </div>
         </div>
-      `).join("")
-      : `<p class="muted">—</p>`;
-  
-    // Panorama
-    const panorama = Array.isArray(data.panorama) ? data.panorama : [];
-    const panoramaHtml = panorama.length
-      ? panorama.map((x, i) => `
-        <div class="section">
-          <h3>${escapeHtml(x.title || ("Item " + (i+1)))}</h3>
-          ${renderBullets(x.bullets || [])}
-          ${recallBox({ id: "panorama:" + i, prompt: "Qual detalhe aqui muda sua interpretação do texto?" })}
+        <div class="mini-card teaching">
+          <div class="mini-label">Ensino</div>
+          <div class="mini-text">${escapeHtml(p.ensino || "—")}</div>
         </div>
-      `).join("")
-      : `<p class="muted">—</p>`;
-  
-    // Aplicações (checklist)
-    const aplicacoes = Array.isArray(data.aplicacoes) ? data.aplicacoes : [];
-    const aplicacoesHtml = aplicacoes.length
-      ? `<div class="checklist">
-          ${aplicacoes.map((t, i) => `
-            <label class="checkitem">
-              <input type="checkbox" data-check-id="aplic:${i}">
-              <span>${escapeHtml(t)}</span>
-            </label>
-          `).join("")}
-        </div>`
-      : `<p class="muted">—</p>`;
-  
-    // Alertas
-    const alertas = renderBullets(data.alertas);
-  
-    // Perguntas (flashcards sem gabarito)
-    const perguntas = Array.isArray(data.perguntas) ? data.perguntas : [];
-    const perguntasHtml = perguntas.length
-      ? perguntas.map((q, i) => qaCard({ q, a: null, id: "p" + (i+1) })).join("")
-      : `<p class="muted">—</p>`;
-  
-    // Leituras
-    const leituras = renderBullets(data.leituras_complementares);
-  
-    // Reflexões/Ações/Oração (ocultas em modo estudo)
-    const reflexoes = renderBullets(data.reflexoes);
-    const acoes = Array.isArray(data.acoes_praticas) && data.acoes_praticas.length
-      ? `<div class="checklist">
-          ${data.acoes_praticas.map((t, i) => `
-            <label class="checkitem">
-              <input type="checkbox" data-check-id="acao:${i}">
-              <span>${escapeHtml(t)}</span>
-            </label>
-          `).join("")}
-        </div>`
-      : `<p class="muted">—</p>`;
-  
-    const oracao = data.oracao_guiada
-      ? `<div class="prayer">${escapeHtml(data.oracao_guiada).replaceAll("\n","<br/>")}</div>`
-      : `<p class="muted">—</p>`;
-  
-    const content = `
-      ${renderTopbar({ relativeBase: "../", slug })}
-  
-      <div class="header">
-        <h1 class="h1">${escapeHtml(title)}</h1>
-        <div class="meta">
-          <span class="muted">Formato: Markdown → UI de estudo</span>
-        </div>
+      </article>
+    `).join("")}</div>`
+    : `<p class="muted">—</p>`;
+
+  const panorama = Array.isArray(data.panorama) ? data.panorama : [];
+  const panoramaHtml = panorama.length
+    ? `<div class="subsection-grid">${panorama.map((x, i) => `
+      <div class="subsection">
+        <div class="card-eyebrow">Leitura ${i + 1}</div>
+        <h3>${escapeHtml(x.title || ("Item " + (i + 1)))}</h3>
+        ${renderBullets(x.bullets || [])}
       </div>
-  
-      <div class="grid two">
-        <div class="card">
-          <h2>1) Texto-base</h2>
-          ${textoBase}
-        </div>
-  
-        <div class="card">
-          <h2>3) Tese central</h2>
-          <p class="lead">${escapeHtml(data.tese || "—")}</p>
-          ${recallBox({ id: "tese", prompt: "Reescreva a tese com suas palavras (sem olhar)." })}
-        </div>
+    `).join("")}</div>`
+    : `<p class="muted">—</p>`;
+
+  const perguntasHtml = Array.isArray(data.perguntas) && data.perguntas.length
+    ? `<ol class="question-list">${data.perguntas.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ol>`
+    : `<p class="muted">—</p>`;
+
+  const reflexoesBlock = [
+    data.reflexoes?.length ? `<div><h3>Reflexões</h3>${renderBullets(data.reflexoes)}</div>` : "",
+    data.acoes_praticas?.length ? `<div><h3>Ações práticas</h3>${renderBullets(data.acoes_praticas)}</div>` : "",
+    data.oracao_guiada ? `<div><h3>Oração guiada</h3><div class="prose">${renderParagraph(data.oracao_guiada)}</div></div>` : ""
+  ].filter(Boolean).join(`<div class="hr"></div>`);
+
+  const content = `
+    <div class="reading-progress"><span data-reading-progress></span></div>
+    ${topbar({ relativeBase: "../", badge: meta.category || "Resumo" })}
+
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="card-eyebrow">Resumo de Estudo</div>
+        <h1 class="hero-title">${escapeHtml(title)}</h1>
+        <p class="hero-subtitle">Leitura estruturada para revisão, ensino e acompanhamento do conteúdo ministrado.</p>
+        ${renderMetaPills(meta)}
+        ${heroSummary(data)}
       </div>
-  
-      <div class="grid">
-        <div class="card">
-          <h2>2) Referências bíblicas</h2>
-          <div class="grid three">
-            <div class="mini">
-              <h3>✅ Confirmadas</h3>
+      <aside class="hero-side">
+        <div class="hero-panel">
+          <div class="hero-panel-title">Visão rápida</div>
+          <p>Resumo organizado para consulta, revisão e ensino com navegação por blocos e leitura progressiva.</p>
+        </div>
+        ${statsBar(data, refs)}
+      </aside>
+    </header>
+
+    ${toc(tocItems)}
+
+    <div class="stack">
+      ${section({
+        id: "texto-base",
+        title: "1) Texto-base",
+        tone: "anchor",
+        bodyHtml: renderBullets(data.texto_base)
+      })}
+
+      ${section({
+        id: "referencias",
+        title: "2) Referências bíblicas",
+        bodyHtml: `
+          <div class="refs-grid">
+            <div class="mini-card">
+              <div class="mini-label">Confirmadas</div>
               ${renderBullets(refs.confirmadas)}
             </div>
-            <div class="mini">
-              <h3>⚪ Citadas mas não explicadas</h3>
+            <div class="mini-card">
+              <div class="mini-label">Citadas mas não explicadas</div>
               ${renderBullets(refs.citadas_nao_explicadas)}
             </div>
-            <div class="mini">
-              <h3>🟡 Implícitas (conferir)</h3>
+            <div class="mini-card">
+              <div class="mini-label">Implícitas</div>
               ${renderBullets(refs.implicitas)}
             </div>
           </div>
+        `
+      })}
+
+      ${section({
+        id: "tese",
+        title: "3) Tese central",
+        tone: "thesis",
+        bodyHtml: `<div class="prose lead">${renderParagraph(data.tese || "")}</div>`
+      })}
+
+      ${section({
+        id: "fluxo",
+        title: "4) Fluxo da mensagem",
+        bodyHtml: fluxoHtml
+      })}
+
+      ${section({
+        id: "mapa",
+        title: "5) Mapa Bíblia → Sermão",
+        bodyHtml: mapaHtml
+      })}
+
+      ${section({
+        id: "panorama",
+        title: "Panorama histórico e cultural",
+        bodyHtml: panoramaHtml
+      })}
+
+      ${section({
+        id: "aplicacoes",
+        title: "6) Aplicações práticas",
+        tone: "action",
+        bodyHtml: renderBullets(data.aplicacoes)
+      })}
+
+      ${section({
+        id: "alertas",
+        title: "7) Alertas / pendências",
+        bodyHtml: renderBullets(data.alertas)
+      })}
+
+      ${section({
+        id: "perguntas",
+        title: "8) Perguntas para revisão",
+        bodyHtml: perguntasHtml
+      })}
+
+      ${section({
+        id: "leituras",
+        title: "Leituras complementares",
+        bodyHtml: renderBullets(data.leituras_complementares)
+      })}
+
+      ${section({
+        id: "reflexoes",
+        title: "Reflexões / ações / oração",
+        bodyHtml: reflexoesBlock || `<p class="muted">—</p>`
+      })}
+    </div>
+
+    <button class="back-to-top" type="button" data-back-to-top hidden>Topo</button>
+  `;
+
+  return pageShell({ title, content, relativeBase: "../", script: readingScript() });
+}
+
+function indexPage({ items }) {
+  const categories = Array.from(new Set(items.map(item => item.meta?.category).filter(Boolean))).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const latest = items[0];
+  const cards = items.map(it => {
+    const meta = it.meta || {};
+    const summaryBits = [meta.category, meta.series, meta.displayDate, it.file, it.title].filter(Boolean).join(" ");
+    return `
+    <article
+      class="summary-card"
+      data-item
+      data-title="${escapeHtml(it.title || "")}"
+      data-category="${escapeHtml(meta.category || "")}"
+      data-sort-date="${escapeHtml(String(meta.sortDate || 0))}"
+      data-search="${escapeHtml(summaryBits)}"
+    >
+      <div class="summary-card-top">
+        <div>
+          <div class="card-eyebrow">${escapeHtml(meta.category || "Resumo")}</div>
+          <h2>${escapeHtml(it.title)}</h2>
         </div>
-  
-        <div class="card">
-          <h2>4) Fluxo da mensagem</h2>
-          ${fluxo}
-        </div>
-  
-        <div class="card">
-          <h2>5) Mapa Bíblia → Sermão</h2>
-          ${mapaHtml}
-        </div>
-  
-        <div class="card">
-          <h2>Panorama histórico e cultural</h2>
-          ${panoramaHtml}
-        </div>
-  
-        <div class="card">
-          <h2>6) Aplicações práticas (checklist)</h2>
-          ${aplicacoesHtml}
-          ${recallBox({ id: "aplicacao_hoje", prompt: "Escolha 1 aplicação e escreva como vai praticar hoje." })}
-        </div>
-  
-        <div class="card">
-          <h2>7) Alertas / pendências</h2>
-          ${alertas}
-        </div>
-  
-        <div class="card">
-          <h2>8) Perguntas para revisão (Active Recall)</h2>
-          ${perguntasHtml}
-        </div>
-  
-        <div class="card">
-          <h2>Leituras complementares</h2>
-          ${leituras}
-        </div>
-  
-        <div class="card hidden" data-hide-when-study>
-          <h2>Reflexões práticas</h2>
-          ${reflexoes}
-        </div>
-  
-        <div class="card hidden" data-hide-when-study>
-          <h2>Ações práticas</h2>
-          ${acoes}
-        </div>
-  
-        <div class="card hidden" data-hide-when-study>
-          <h2>Oração guiada</h2>
-          ${oracao}
+        <span class="date-chip">${escapeHtml(meta.displayDate || "Sem data")}</span>
+      </div>
+      <p class="summary-card-copy">${escapeHtml(meta.series || "Leitura estruturada do conteúdo em formato de revisão.")}</p>
+      <div class="summary-card-meta">
+        <span>${escapeHtml(it.file)}</span>
+      </div>
+      <div class="summary-card-actions">
+        <a class="btn" href="./${escapeHtml(it.slug)}/index.html">Abrir leitura</a>
+      </div>
+    </article>`;
+  }).join("");
+
+  const content = `
+    ${topbar({ relativeBase: "./", badge: "Arquivo", actionLabel: "GitHub Pages", actionHref: "index.html" })}
+
+    <header class="hero hero-index">
+      <div class="hero-copy">
+        <div class="card-eyebrow">Biblioteca</div>
+        <h1 class="hero-title">Resumos para leitura, revisão e ensino</h1>
+        <p class="hero-subtitle">Coleção de estudos organizados para leitura rápida, navegação por tema e consulta posterior.</p>
+        <div class="meta-pills">
+          <span class="pill">Total <strong data-count>${items.length}</strong></span>
+          <span class="pill">${escapeHtml(categories.length)} categorias</span>
+          <span class="pill">Fonte: summaries_md/</span>
         </div>
       </div>
-  
-      ${renderClientScript({ slug })}
-    `;
-  
-    return pageShell({ title, content, relativeBase: "../" });
-  }
-  
-  function indexPage({ items }) {
-    const rows = items.map(it => `
-      <tr>
-        <td>
-          <a class="rowlink" href="./${escapeHtml(it.slug)}/index.html">
-            <div class="title">${escapeHtml(it.title)}</div>
-            <div class="sub">${escapeHtml(it.file)}</div>
-          </a>
-        </td>
-        <td><a class="btn" href="./${escapeHtml(it.slug)}/index.html">Abrir</a></td>
-      </tr>
-    `).join("");
-  
-    const content = `
-      <div class="topbar">
-        <div class="brand">
-          <span>📚 Study Pages</span>
-          <span class="badge">Index</span>
+      <aside class="hero-side hero-side-index">
+        <div class="feature-card">
+          <div class="card-eyebrow">Destaque</div>
+          <h2>${escapeHtml(latest?.title || "Nenhum resumo disponível")}</h2>
+          <p>${escapeHtml(latest?.meta?.displayDate || "Adicione arquivos em summaries_md/ para começar.")}</p>
+          ${latest ? `<a class="btn" href="./${escapeHtml(latest.slug)}/index.html">Abrir mais recente</a>` : ""}
         </div>
-        <div class="actions">
-          <span class="muted" style="font-size:13px;">Coloque .md em <code>summaries_md/</code> e rode <code>npm run build</code></span>
-        </div>
+      </aside>
+    </header>
+
+    <section class="card filter-card">
+      <div class="filter-grid">
+        <label class="field">
+          <span>Buscar</span>
+          <input type="search" placeholder="Título, arquivo, série..." data-search />
+        </label>
+        <label class="field">
+          <span>Categoria</span>
+          <select data-filter>
+            <option value="">Todas</option>
+            ${categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")}
+          </select>
+        </label>
+        <label class="field">
+          <span>Ordenação</span>
+          <select data-sort>
+            <option value="date-desc">Mais recentes</option>
+            <option value="title-asc">Título A-Z</option>
+            <option value="title-desc">Título Z-A</option>
+          </select>
+        </label>
       </div>
-  
-      <div class="header">
-        <h1 class="h1">Resumos para estudo</h1>
-        <div class="meta"><span>Total: <strong>${items.length}</strong></span></div>
-      </div>
-  
-      <div class="card">
-        <h2>📄 Lista</h2>
-        <table class="table">
-          <thead><tr><th>Título</th><th></th></tr></thead>
-          <tbody>
-            ${rows || `<tr><td colspan="2" class="muted">Nenhum arquivo encontrado em <code>summaries_md/</code>.</td></tr>`}
-          </tbody>
-        </table>
-      </div>
-    `;
-  
-    return pageShell({ title: "Study Pages - Index", content, relativeBase: "./" });
-  }
-  
-  module.exports = { videoPage, indexPage };
+    </section>
+
+    <section class="summary-grid" data-list>
+      ${cards}
+    </section>
+
+    <section class="card empty-state" data-empty hidden>
+      <h2>Nenhum resumo encontrado</h2>
+      <p class="muted">Ajuste a busca ou o filtro para encontrar outra leitura.</p>
+    </section>
+  `;
+
+  return pageShell({ title: "Reader - Index", content, relativeBase: "./", script: indexScript() });
+}
+
+module.exports = { videoPage, indexPage };
