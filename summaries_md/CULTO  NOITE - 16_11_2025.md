@@ -76,7 +76,6 @@ A oração de Josafá revela que, em momentos de crise, a confiança e a busca p
 ---
 
 ## 7) Alertas / pendências
-- Referências incompletas em alguns trechos mencionados.
 - Necessidade de aprofundar o contexto histórico de 2 Crônicas 20 para melhor compreensão.
 
 ---

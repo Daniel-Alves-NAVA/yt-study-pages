@@ -11,26 +11,28 @@
   <link rel="stylesheet" href="../assets/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
   <div class="page-glow page-glow-a"></div>
   <div class="page-glow page-glow-b"></div>
   <div class="container">
     
     <div class="reading-progress"><span data-reading-progress></span></div>
     
-  <div class="topbar">
+  <header class="topbar" role="banner">
     <div class="brand">
-      <a href="../index.html" class="brand-link">Reader</a>
+      <a href="../index.html" class="brand-link" aria-label="Ir para a página inicial">Reader</a>
       <span class="badge">Culto De Jovens</span>
     </div>
-    <div class="actions">
+    <nav class="actions" aria-label="Ações da página">
       <a class="btn btn-ghost" href="../index.html">Voltar</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-    <header class="hero">
+    <main id="main-content" tabindex="-1">
+    <header class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <div class="card-eyebrow">Resumo de Estudo</div>
-        <h1 class="hero-title">Resumo do Estudo Bíblico – O Poder Transformador da Palavra e da Presença de Deus</h1>
+        <h1 class="hero-title" id="page-title">Resumo do Estudo Bíblico – O Poder Transformador da Palavra e da Presença de Deus</h1>
         <p class="hero-subtitle">Leitura estruturada para revisão, ensino e acompanhamento do conteúdo ministrado.</p>
         <div class="meta-pills"><span class="pill">Culto De Jovens</span><span class="pill">Chama</span><span class="pill">21 de fevereiro de 2026</span></div>
         <div class="hero-notes"><div class="hero-note"><strong>Tese:</strong> A palavra de Deus é uma ferramenta poderosa de revelação, autoridade e governo espiritual, e sua declaração com fé traz transformação e vitória na vida do cristão.</div><div class="hero-note"><strong>Primeira aplicação:</strong> Declare palavras de vida e bênçãos sobre sua vida e família.</div></div>
@@ -70,34 +72,34 @@
     
   <nav class="card toc" aria-label="Sumário do resumo">
     <div class="card-eyebrow">Navegação</div>
-    <div class="toc-title">Percurso de leitura</div>
+    <h2 class="toc-title">Percurso de leitura</h2>
     <div class="toc-grid">
       <a class="toc-link" href="#texto-base" data-section-link="texto-base">Texto-base</a><a class="toc-link" href="#referencias" data-section-link="referencias">Referências</a><a class="toc-link" href="#tese" data-section-link="tese">Tese central</a><a class="toc-link" href="#fluxo" data-section-link="fluxo">Fluxo da mensagem</a><a class="toc-link" href="#mapa" data-section-link="mapa">Mapa Bíblia → Sermão</a><a class="toc-link" href="#panorama" data-section-link="panorama">Panorama histórico</a><a class="toc-link" href="#aplicacoes" data-section-link="aplicacoes">Aplicações práticas</a><a class="toc-link" href="#alertas" data-section-link="alertas">Alertas / pendências</a><a class="toc-link" href="#perguntas" data-section-link="perguntas">Perguntas para revisão</a><a class="toc-link" href="#leituras" data-section-link="leituras">Leituras complementares</a><a class="toc-link" href="#reflexoes" data-section-link="reflexoes">Reflexões / ações / oração</a>
     </div>
   </nav>
 
-    <div class="stack">
+    <div class="stack" aria-label="Seções do resumo">
       
-  <section class="card section section-anchor" id="texto-base" data-section="texto-base">
-    <h2>1) Texto-base</h2>
+  <section class="card section section-anchor" id="texto-base" data-section="texto-base" aria-labelledby="texto-base-title" tabindex="-1">
+    <h2 id="texto-base-title">1) Texto-base</h2>
     <ul class="list"><li>Gênesis 1; João 1; Neemias 1:8</li></ul>
   </section>
 
       
-  <section class="card section" id="referencias" data-section="referencias">
-    <h2>2) Referências bíblicas</h2>
+  <section class="card section" id="referencias" data-section="referencias" aria-labelledby="referencias-title" tabindex="-1">
+    <h2 id="referencias-title">2) Referências bíblicas</h2>
     
           <div class="refs-grid">
             <div class="mini-card">
-              <div class="mini-label">Confirmadas</div>
+              <div class="mini-label">Referências centrais</div>
               <ul class="list"><li>Gênesis 1</li><li>João 1</li><li>Neemias 1:8</li></ul>
             </div>
             <div class="mini-card">
-              <div class="mini-label">Citadas mas não explicadas</div>
+              <div class="mini-label">Referências mencionadas</div>
               <p class="muted">—</p>
             </div>
             <div class="mini-card">
-              <div class="mini-label">Implícitas</div>
+              <div class="mini-label">Referências contextuais</div>
               <ul class="list"><li>O poder da palavra na criação e na vida espiritual</li><li>A importância de declarar a palavra de Deus com fé</li><li>A presença de Deus como fonte de transformação</li></ul>
             </div>
           </div>
@@ -105,14 +107,14 @@
   </section>
 
       
-  <section class="card section section-thesis" id="tese" data-section="tese">
-    <h2>3) Tese central</h2>
+  <section class="card section section-thesis" id="tese" data-section="tese" aria-labelledby="tese-title" tabindex="-1">
+    <h2 id="tese-title">3) Tese central</h2>
     <div class="prose lead"><p>A palavra de Deus é uma ferramenta poderosa de revelação, autoridade e governo espiritual, e sua declaração com fé traz transformação e vitória na vida do cristão.</p></div>
   </section>
 
       
-  <section class="card section" id="fluxo" data-section="fluxo">
-    <h2>4) Fluxo da mensagem</h2>
+  <section class="card section" id="fluxo" data-section="fluxo" aria-labelledby="fluxo-title" tabindex="-1">
+    <h2 id="fluxo-title">4) Fluxo da mensagem</h2>
     <div class="flow">
         
           <div class="flow-item">
@@ -143,8 +145,8 @@
   </section>
 
       
-  <section class="card section" id="mapa" data-section="mapa">
-    <h2>5) Mapa Bíblia → Sermão</h2>
+  <section class="card section" id="mapa" data-section="mapa" aria-labelledby="mapa-title" tabindex="-1">
+    <h2 id="mapa-title">5) Mapa Bíblia → Sermão</h2>
     <div class="mapa-stack">
       <article class="mapa-item">
         <div class="card-eyebrow">Ponto 1</div>
@@ -206,29 +208,29 @@
   </section>
 
       
-  <section class="card section" id="panorama" data-section="panorama">
-    <h2>Panorama histórico e cultural</h2>
+  <section class="card section" id="panorama" data-section="panorama" aria-labelledby="panorama-title" tabindex="-1">
+    <h2 id="panorama-title">Panorama histórico e cultural</h2>
     <div class="subsection-grid">
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 1</div>
+        <div class="card-eyebrow">Aspecto 1</div>
         <h3>Contexto histórico geral</h3>
         <ul class="list"><li>Gênesis apresenta a criação do mundo, destacando o poder da palavra de Deus. João reforça que Jesus é a Palavra encarnada, sustentando o universo. Neemias, em seu contexto de reconstrução de Jerusalém, ora lembrando das promessas de Deus para obter vitória.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 2</div>
+        <div class="card-eyebrow">Aspecto 2</div>
         <h3>Relação entre os grupos/personagens</h3>
         <ul class="list"><li>Deus como Criador e sustentador, Jesus como a Palavra viva, e Neemias como líder que busca a intervenção divina para restaurar o povo.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 3</div>
+        <div class="card-eyebrow">Aspecto 3</div>
         <h3>Significado cultural/religioso do episódio</h3>
         <ul class="list"><li>A palavra de Deus é vista como autoridade suprema, capaz de criar, sustentar e transformar realidades.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 4</div>
+        <div class="card-eyebrow">Aspecto 4</div>
         <h3>Como isso amplifica o impacto da mensagem pregada</h3>
         <ul class="list"><li>Entender o poder da palavra de Deus reforça a importância de declarar e viver segundo suas promessas, confiando na sua eficácia para transformação e vitória.</li></ul>
       </div>
@@ -236,39 +238,40 @@
   </section>
 
       
-  <section class="card section section-action" id="aplicacoes" data-section="aplicacoes">
-    <h2>6) Aplicações práticas</h2>
+  <section class="card section section-action" id="aplicacoes" data-section="aplicacoes" aria-labelledby="aplicacoes-title" tabindex="-1">
+    <h2 id="aplicacoes-title">6) Aplicações práticas</h2>
     <ul class="list"><li>Declare palavras de vida e bênçãos sobre sua vida e família.</li><li>Ore com base na palavra de Deus, lembrando das promessas divinas.</li><li>Evite dúvidas e opiniões negativas que possam desviar sua fé.</li><li>Mantenha uma postura de fé, reafirmando a palavra de Deus em suas orações.</li><li>Rompa com crenças limitantes e palavras de maldição do passado.</li><li>Posicione-se em fé, levantando as mãos como ato de coragem e entrega.</li><li>Busque a presença de Deus como fonte de transformação e renovação.</li><li>Utilize a palavra de Deus como arma espiritual na luta diária.</li></ul>
   </section>
 
       
-  <section class="card section" id="alertas" data-section="alertas">
-    <h2>7) Alertas / pendências</h2>
+  <section class="card section" id="alertas" data-section="alertas" aria-labelledby="alertas-title" tabindex="-1">
+    <h2 id="alertas-title">7) Alertas / pendências</h2>
     <ul class="list"><li>Referências incompletas: Efésios, 2 Coríntios, e outras mencionadas sem detalhes.</li><li>Temas bíblicos implícitos precisam ser confirmados para maior precisão.</li></ul>
   </section>
 
       
-  <section class="card section" id="perguntas" data-section="perguntas">
-    <h2>8) Perguntas para revisão</h2>
+  <section class="card section" id="perguntas" data-section="perguntas" aria-labelledby="perguntas-title" tabindex="-1">
+    <h2 id="perguntas-title">8) Perguntas para revisão</h2>
     <ol class="question-list"><li>Qual é o papel da palavra de Deus na criação, segundo Gênesis 1?</li><li>Como João 1 apresenta Jesus em relação à palavra de Deus?</li><li>Por que a oração de Neemias é considerada baseada na palavra de Deus?</li><li>Qual a importância de declarar a palavra de Deus com fé?</li><li>Como a presença de Deus transforma o ambiente espiritual?</li><li>Por que é importante romper com crenças limitantes e palavras negativas?</li><li>Como a palavra de Deus atua como arma espiritual na vida do cristão?</li><li>Qual é a relação entre a palavra de Deus e a vitória espiritual?</li><li>Como a oração baseada na palavra sustenta a fé em momentos difíceis?</li><li>De que forma a declaração de palavras de vida pode impactar o destino do cristão?</li></ol>
   </section>
 
       
-  <section class="card section" id="leituras" data-section="leituras">
-    <h2>Leituras complementares</h2>
+  <section class="card section" id="leituras" data-section="leituras" aria-labelledby="leituras-title" tabindex="-1">
+    <h2 id="leituras-title">Leituras complementares</h2>
     <ul class="list"><li>Salmo 119</li><li>Tiago 1</li><li>Hebreus 4</li><li>Efésios 6</li><li>2 Timóteo 3</li></ul>
   </section>
 
       
-  <section class="card section" id="reflexoes" data-section="reflexoes">
-    <h2>Reflexões / ações / oração</h2>
-    <div><h3>Reflexões</h3><ul class="list"><li>A palavra de Deus não é apenas informação, mas autoridade que transforma vidas.</li><li>Declarar a palavra com fé é essencial para experimentar suas promessas.</li><li>A presença de Deus muda o ambiente e fortalece a fé do cristão.</li><li>A oração baseada na palavra sustenta a esperança e a confiança em Deus.</li><li>Romper com crenças limitantes é fundamental para viver a liberdade em Cristo.</li><li>A palavra de Deus é a arma mais poderosa na luta espiritual diária.</li><li>Manter-se alinhado com a palavra garante vitória e transformação.</li><li>A fé verdadeira se manifesta na declaração e na ação baseada na palavra de Deus.</li></ul></div><div class="hr"></div><div><h3>Ações práticas</h3><ul class="list"><li>Reserve um tempo diário para declarar as promessas de Deus sobre sua vida.</li><li>Participe de grupos de oração que enfatizam a oração baseada na palavra de Deus.</li></ul></div><div class="hr"></div><div><h3>Oração guiada</h3><div class="prose"><p>Senhor, eu te agradeço pela tua palavra, que é poderosa e eficaz. Peço que me ajudes a declarar com fé as promessas que o Senhor tem para minha vida. Que a tua presença transforme meu coração e meu ambiente, e que eu possa sempre confiar na tua palavra para vencer as dificuldades. Em nome de Jesus, amém.</p></div></div>
+  <section class="card section" id="reflexoes" data-section="reflexoes" aria-labelledby="reflexoes-title" tabindex="-1">
+    <h2 id="reflexoes-title">Reflexão e prática</h2>
+    <div><h3>Reflexões</h3><ul class="list"><li>A palavra de Deus não é apenas informação, mas autoridade que transforma vidas.</li><li>Declarar a palavra com fé é essencial para experimentar suas promessas.</li><li>A presença de Deus muda o ambiente e fortalece a fé do cristão.</li><li>A oração baseada na palavra sustenta a esperança e a confiança em Deus.</li><li>Romper com crenças limitantes é fundamental para viver a liberdade em Cristo.</li><li>A palavra de Deus é a arma mais poderosa na luta espiritual diária.</li><li>Manter-se alinhado com a palavra garante vitória e transformação.</li><li>A fé verdadeira se manifesta na declaração e na ação baseada na palavra de Deus.</li></ul></div><div class="hr"></div><div><h3>Ações práticas</h3><ul class="list"><li>Reserve um tempo diário para declarar as promessas de Deus sobre sua vida.</li><li>Participe de grupos de oração que enfatizam a oração baseada na palavra de Deus.</li></ul></div><div class="hr"></div><div><h3>Momento de oração</h3><div class="prose"><p>Senhor, eu te agradeço pela tua palavra, que é poderosa e eficaz. Peço que me ajudes a declarar com fé as promessas que o Senhor tem para minha vida. Que a tua presença transforme meu coração e meu ambiente, e que eu possa sempre confiar na tua palavra para vencer as dificuldades. Em nome de Jesus, amém.</p></div></div>
   </section>
     </div>
 
     <button class="back-to-top" type="button" data-back-to-top hidden>Topo</button>
+    </main>
   
-    <div class="footer">Gerado automaticamente • 2026-03-01</div>
+    <footer class="footer">Resumo preparado para leitura, ensino e reflexão • atualizado em 2 de março de 2026</footer>
   </div>
   <script>
 const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
@@ -289,7 +292,12 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const id = entry.target.getAttribute("data-section");
-    sectionLinks.forEach(link => link.classList.toggle("is-active", link.getAttribute("data-section-link") === id));
+    sectionLinks.forEach(link => {
+      const isActive = link.getAttribute("data-section-link") === id;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
   });
 }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
 

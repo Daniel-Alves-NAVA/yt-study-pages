@@ -25,7 +25,7 @@ function renderMetaPills(meta = {}) {
   return `<div class="meta-pills">${pills.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
 }
 
-function pageShell({ title, content, relativeBase, script = "" }) {
+function pageShell({ title, content, relativeBase, script = "", footerText = "Resumo preparado para leitura, ensino e reflexão" }) {
   return `<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -39,11 +39,12 @@ function pageShell({ title, content, relativeBase, script = "" }) {
   <link rel="stylesheet" href="${relativeBase}assets/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
   <div class="page-glow page-glow-a"></div>
   <div class="page-glow page-glow-b"></div>
   <div class="container">
     ${content}
-    <div class="footer">Gerado automaticamente • ${new Date().toISOString().slice(0, 10)}</div>
+    <footer class="footer">${escapeHtml(footerText)}</footer>
   </div>
   ${script ? `<script>${script}</script>` : ""}
 </body>
@@ -52,22 +53,22 @@ function pageShell({ title, content, relativeBase, script = "" }) {
 
 function topbar({ relativeBase, badge = "Colecao", actionLabel = "Voltar", actionHref = "index.html" }) {
   return `
-  <div class="topbar">
+  <header class="topbar" role="banner">
     <div class="brand">
-      <a href="${relativeBase}index.html" class="brand-link">Reader</a>
+      <a href="${relativeBase}index.html" class="brand-link" aria-label="Ir para a página inicial">Reader</a>
       <span class="badge">${escapeHtml(badge)}</span>
     </div>
-    <div class="actions">
+    <nav class="actions" aria-label="Ações da página">
       <a class="btn btn-ghost" href="${relativeBase}${escapeHtml(actionHref)}">${escapeHtml(actionLabel)}</a>
-    </div>
-  </div>`;
+    </nav>
+  </header>`;
 }
 
 function toc(items) {
   return `
   <nav class="card toc" aria-label="Sumário do resumo">
     <div class="card-eyebrow">Navegação</div>
-    <div class="toc-title">Percurso de leitura</div>
+    <h2 class="toc-title">Percurso de leitura</h2>
     <div class="toc-grid">
       ${items.map(([id, label]) => `<a class="toc-link" href="#${id}" data-section-link="${id}">${escapeHtml(label)}</a>`).join("")}
     </div>
@@ -76,9 +77,10 @@ function toc(items) {
 
 function section({ id, title, bodyHtml, tone = "" }) {
   const toneClass = tone ? ` section-${tone}` : "";
+  const headingId = `${id}-title`;
   return `
-  <section class="card section${toneClass}" id="${escapeHtml(id)}" data-section="${escapeHtml(id)}">
-    <h2>${escapeHtml(title)}</h2>
+  <section class="card section${toneClass}" id="${escapeHtml(id)}" data-section="${escapeHtml(id)}" aria-labelledby="${escapeHtml(headingId)}" tabindex="-1">
+    <h2 id="${escapeHtml(headingId)}">${escapeHtml(title)}</h2>
     ${bodyHtml}
   </section>`;
 }
@@ -131,7 +133,12 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const id = entry.target.getAttribute("data-section");
-    sectionLinks.forEach(link => link.classList.toggle("is-active", link.getAttribute("data-section-link") === id));
+    sectionLinks.forEach(link => {
+      const isActive = link.getAttribute("data-section-link") === id;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
   });
 }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
 
@@ -250,7 +257,7 @@ function videoPage({ data, slug }) {
   const panoramaHtml = panorama.length
     ? `<div class="subsection-grid">${panorama.map((x, i) => `
       <div class="subsection">
-        <div class="card-eyebrow">Leitura ${i + 1}</div>
+        <div class="card-eyebrow">Aspecto ${i + 1}</div>
         <h3>${escapeHtml(x.title || ("Item " + (i + 1)))}</h3>
         ${renderBullets(x.bullets || [])}
       </div>
@@ -264,17 +271,18 @@ function videoPage({ data, slug }) {
   const reflexoesBlock = [
     data.reflexoes?.length ? `<div><h3>Reflexões</h3>${renderBullets(data.reflexoes)}</div>` : "",
     data.acoes_praticas?.length ? `<div><h3>Ações práticas</h3>${renderBullets(data.acoes_praticas)}</div>` : "",
-    data.oracao_guiada ? `<div><h3>Oração guiada</h3><div class="prose">${renderParagraph(data.oracao_guiada)}</div></div>` : ""
+    data.oracao_guiada ? `<div><h3>Momento de oração</h3><div class="prose">${renderParagraph(data.oracao_guiada)}</div></div>` : ""
   ].filter(Boolean).join(`<div class="hr"></div>`);
 
   const content = `
     <div class="reading-progress"><span data-reading-progress></span></div>
     ${topbar({ relativeBase: "../", badge: meta.category || "Resumo" })}
 
-    <header class="hero">
+    <main id="main-content" tabindex="-1">
+    <header class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <div class="card-eyebrow">Resumo de Estudo</div>
-        <h1 class="hero-title">${escapeHtml(title)}</h1>
+        <h1 class="hero-title" id="page-title">${escapeHtml(title)}</h1>
         <p class="hero-subtitle">Leitura estruturada para revisão, ensino e acompanhamento do conteúdo ministrado.</p>
         ${renderMetaPills(meta)}
         ${heroSummary(data)}
@@ -290,7 +298,7 @@ function videoPage({ data, slug }) {
 
     ${toc(tocItems)}
 
-    <div class="stack">
+    <div class="stack" aria-label="Seções do resumo">
       ${section({
         id: "texto-base",
         title: "1) Texto-base",
@@ -304,15 +312,15 @@ function videoPage({ data, slug }) {
         bodyHtml: `
           <div class="refs-grid">
             <div class="mini-card">
-              <div class="mini-label">Confirmadas</div>
+              <div class="mini-label">Referências centrais</div>
               ${renderBullets(refs.confirmadas)}
             </div>
             <div class="mini-card">
-              <div class="mini-label">Citadas mas não explicadas</div>
+              <div class="mini-label">Referências mencionadas</div>
               ${renderBullets(refs.citadas_nao_explicadas)}
             </div>
             <div class="mini-card">
-              <div class="mini-label">Implícitas</div>
+              <div class="mini-label">Referências contextuais</div>
               ${renderBullets(refs.implicitas)}
             </div>
           </div>
@@ -371,15 +379,22 @@ function videoPage({ data, slug }) {
 
       ${section({
         id: "reflexoes",
-        title: "Reflexões / ações / oração",
+        title: "Reflexão e prática",
         bodyHtml: reflexoesBlock || `<p class="muted">—</p>`
       })}
     </div>
 
     <button class="back-to-top" type="button" data-back-to-top hidden>Topo</button>
+    </main>
   `;
 
-  return pageShell({ title, content, relativeBase: "../", script: readingScript() });
+  return pageShell({
+    title,
+    content,
+    relativeBase: "../",
+    script: readingScript(),
+    footerText: meta.footerText
+  });
 }
 
 function indexPage({ items }) {
@@ -417,13 +432,14 @@ function indexPage({ items }) {
   const content = `
     ${topbar({ relativeBase: "./", badge: "Arquivo", actionLabel: "GitHub Pages", actionHref: "index.html" })}
 
-    <header class="hero hero-index">
+    <main id="main-content" tabindex="-1">
+    <header class="hero hero-index" aria-labelledby="index-title">
       <div class="hero-copy">
         <div class="card-eyebrow">Biblioteca</div>
-        <h1 class="hero-title">Resumos para leitura, revisão e ensino</h1>
+        <h1 class="hero-title" id="index-title">Resumos para leitura, revisão e ensino</h1>
         <p class="hero-subtitle">Coleção de estudos organizados para leitura rápida, navegação por tema e consulta posterior.</p>
         <div class="meta-pills">
-          <span class="pill">Total <strong data-count>${items.length}</strong></span>
+          <span class="pill">Total <strong data-count aria-live="polite">${items.length}</strong></span>
           <span class="pill">${escapeHtml(categories.length)} categorias</span>
           <span class="pill">Fonte: summaries_md/</span>
         </div>
@@ -438,22 +454,23 @@ function indexPage({ items }) {
       </aside>
     </header>
 
-    <section class="card filter-card">
+    <section class="card filter-card" aria-labelledby="filters-title">
+      <h2 id="filters-title" class="sr-only">Filtros da biblioteca</h2>
       <div class="filter-grid">
         <label class="field">
           <span>Buscar</span>
-          <input type="search" placeholder="Título, arquivo, série..." data-search />
+          <input type="search" placeholder="Título, arquivo, série..." data-search aria-label="Buscar por título, arquivo ou série" />
         </label>
         <label class="field">
           <span>Categoria</span>
-          <select data-filter>
+          <select data-filter aria-label="Filtrar por categoria">
             <option value="">Todas</option>
             ${categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")}
           </select>
         </label>
         <label class="field">
           <span>Ordenação</span>
-          <select data-sort>
+          <select data-sort aria-label="Ordenar resultados">
             <option value="date-desc">Mais recentes</option>
             <option value="title-asc">Título A-Z</option>
             <option value="title-desc">Título Z-A</option>
@@ -462,14 +479,15 @@ function indexPage({ items }) {
       </div>
     </section>
 
-    <section class="summary-grid" data-list>
+    <section class="summary-grid" data-list aria-label="Lista de resumos">
       ${cards}
     </section>
 
-    <section class="card empty-state" data-empty hidden>
+    <section class="card empty-state" data-empty hidden aria-live="polite">
       <h2>Nenhum resumo encontrado</h2>
       <p class="muted">Ajuste a busca ou o filtro para encontrar outra leitura.</p>
     </section>
+    </main>
   `;
 
   return pageShell({ title: "Reader - Index", content, relativeBase: "./", script: indexScript() });

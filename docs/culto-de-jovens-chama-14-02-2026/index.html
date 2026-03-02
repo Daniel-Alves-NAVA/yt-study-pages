@@ -11,26 +11,28 @@
   <link rel="stylesheet" href="../assets/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
   <div class="page-glow page-glow-a"></div>
   <div class="page-glow page-glow-b"></div>
   <div class="container">
     
     <div class="reading-progress"><span data-reading-progress></span></div>
     
-  <div class="topbar">
+  <header class="topbar" role="banner">
     <div class="brand">
-      <a href="../index.html" class="brand-link">Reader</a>
+      <a href="../index.html" class="brand-link" aria-label="Ir para a página inicial">Reader</a>
       <span class="badge">Culto De Jovens</span>
     </div>
-    <div class="actions">
+    <nav class="actions" aria-label="Ações da página">
       <a class="btn btn-ghost" href="../index.html">Voltar</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-    <header class="hero">
+    <main id="main-content" tabindex="-1">
+    <header class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <div class="card-eyebrow">Resumo de Estudo</div>
-        <h1 class="hero-title">Resumo do Estudo Bíblico – A Prioridade da Adoração e Conexão com Deus</h1>
+        <h1 class="hero-title" id="page-title">Resumo do Estudo Bíblico – A Prioridade da Adoração e Conexão com Deus</h1>
         <p class="hero-subtitle">Leitura estruturada para revisão, ensino e acompanhamento do conteúdo ministrado.</p>
         <div class="meta-pills"><span class="pill">Culto De Jovens</span><span class="pill">Chama</span><span class="pill">14 de fevereiro de 2026</span></div>
         <div class="hero-notes"><div class="hero-note"><strong>Tese:</strong> A adoração a Deus deve ser a prioridade máxima na vida do cristão, sem negociações ou trocas, buscando sempre a presença de Jesus e a participação ativa na comunidade.</div><div class="hero-note"><strong>Primeira aplicação:</strong> Priorizar a adoração a Deus em todas as áreas da vida.</div></div>
@@ -70,34 +72,34 @@
     
   <nav class="card toc" aria-label="Sumário do resumo">
     <div class="card-eyebrow">Navegação</div>
-    <div class="toc-title">Percurso de leitura</div>
+    <h2 class="toc-title">Percurso de leitura</h2>
     <div class="toc-grid">
       <a class="toc-link" href="#texto-base" data-section-link="texto-base">Texto-base</a><a class="toc-link" href="#referencias" data-section-link="referencias">Referências</a><a class="toc-link" href="#tese" data-section-link="tese">Tese central</a><a class="toc-link" href="#fluxo" data-section-link="fluxo">Fluxo da mensagem</a><a class="toc-link" href="#mapa" data-section-link="mapa">Mapa Bíblia → Sermão</a><a class="toc-link" href="#panorama" data-section-link="panorama">Panorama histórico</a><a class="toc-link" href="#aplicacoes" data-section-link="aplicacoes">Aplicações práticas</a><a class="toc-link" href="#alertas" data-section-link="alertas">Alertas / pendências</a><a class="toc-link" href="#perguntas" data-section-link="perguntas">Perguntas para revisão</a><a class="toc-link" href="#leituras" data-section-link="leituras">Leituras complementares</a><a class="toc-link" href="#reflexoes" data-section-link="reflexoes">Reflexões / ações / oração</a>
     </div>
   </nav>
 
-    <div class="stack">
+    <div class="stack" aria-label="Seções do resumo">
       
-  <section class="card section section-anchor" id="texto-base" data-section="texto-base">
-    <h2>1) Texto-base</h2>
+  <section class="card section section-anchor" id="texto-base" data-section="texto-base" aria-labelledby="texto-base-title" tabindex="-1">
+    <h2 id="texto-base-title">1) Texto-base</h2>
     <ul class="list"><li>Lucas 10 (INCOMPLETO)</li></ul>
   </section>
 
       
-  <section class="card section" id="referencias" data-section="referencias">
-    <h2>2) Referências bíblicas</h2>
+  <section class="card section" id="referencias" data-section="referencias" aria-labelledby="referencias-title" tabindex="-1">
+    <h2 id="referencias-title">2) Referências bíblicas</h2>
     
           <div class="refs-grid">
             <div class="mini-card">
-              <div class="mini-label">Confirmadas</div>
+              <div class="mini-label">Referências centrais</div>
               <ul class="list"><li>Lucas 10 (INCOMPLETO)</li><li>2 Coríntios 9:7</li></ul>
             </div>
             <div class="mini-card">
-              <div class="mini-label">Citadas mas não explicadas</div>
+              <div class="mini-label">Referências mencionadas</div>
               <p class="muted">—</p>
             </div>
             <div class="mini-card">
-              <div class="mini-label">Implícitas</div>
+              <div class="mini-label">Referências contextuais</div>
               <ul class="list"><li>Adoração a Deus como prioridade</li><li>Importância de buscar a presença de Jesus</li><li>Gratidão e alegria ao contribuir com dízimos e ofertas</li><li>Participação ativa na comunidade cristã</li></ul>
             </div>
           </div>
@@ -105,14 +107,14 @@
   </section>
 
       
-  <section class="card section section-thesis" id="tese" data-section="tese">
-    <h2>3) Tese central</h2>
+  <section class="card section section-thesis" id="tese" data-section="tese" aria-labelledby="tese-title" tabindex="-1">
+    <h2 id="tese-title">3) Tese central</h2>
     <div class="prose lead"><p>A adoração a Deus deve ser a prioridade máxima na vida do cristão, sem negociações ou trocas, buscando sempre a presença de Jesus e a participação ativa na comunidade.</p></div>
   </section>
 
       
-  <section class="card section" id="fluxo" data-section="fluxo">
-    <h2>4) Fluxo da mensagem</h2>
+  <section class="card section" id="fluxo" data-section="fluxo" aria-labelledby="fluxo-title" tabindex="-1">
+    <h2 id="fluxo-title">4) Fluxo da mensagem</h2>
     <div class="flow">
         
           <div class="flow-item">
@@ -143,8 +145,8 @@
   </section>
 
       
-  <section class="card section" id="mapa" data-section="mapa">
-    <h2>5) Mapa Bíblia → Sermão</h2>
+  <section class="card section" id="mapa" data-section="mapa" aria-labelledby="mapa-title" tabindex="-1">
+    <h2 id="mapa-title">5) Mapa Bíblia → Sermão</h2>
     <div class="mapa-stack">
       <article class="mapa-item">
         <div class="card-eyebrow">Ponto 1</div>
@@ -206,29 +208,29 @@
   </section>
 
       
-  <section class="card section" id="panorama" data-section="panorama">
-    <h2>Panorama histórico e cultural</h2>
+  <section class="card section" id="panorama" data-section="panorama" aria-labelledby="panorama-title" tabindex="-1">
+    <h2 id="panorama-title">Panorama histórico e cultural</h2>
     <div class="subsection-grid">
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 1</div>
+        <div class="card-eyebrow">Aspecto 1</div>
         <h3>Contexto histórico geral</h3>
         <ul class="list"><li>Lucas 10 apresenta ensinamentos de Jesus sobre a prioridade da adoração e a busca pela presença de Deus, em um contexto de ensino e missão.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 2</div>
+        <div class="card-eyebrow">Aspecto 2</div>
         <h3>Relação entre os grupos/personagens</h3>
         <ul class="list"><li>Jesus ensina seus discípulos a escolherem a melhor parte, exemplificada por Maria, e a valorizarem a presença de Deus acima de tudo.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 3</div>
+        <div class="card-eyebrow">Aspecto 3</div>
         <h3>Significado cultural/religioso</h3>
         <ul class="list"><li>A adoração e a busca pela presença de Deus eram centrais na vida judaica, e Jesus reforça essa prioridade para seus seguidores.</li></ul>
       </div>
     
       <div class="subsection">
-        <div class="card-eyebrow">Leitura 4</div>
+        <div class="card-eyebrow">Aspecto 4</div>
         <h3>Amplificação da mensagem</h3>
         <ul class="list"><li>O contexto reforça que a verdadeira adoração exige entrega total e prioridade na vida do cristão, sem negociações ou distrações.</li></ul>
       </div>
@@ -236,39 +238,40 @@
   </section>
 
       
-  <section class="card section section-action" id="aplicacoes" data-section="aplicacoes">
-    <h2>6) Aplicações práticas</h2>
+  <section class="card section section-action" id="aplicacoes" data-section="aplicacoes" aria-labelledby="aplicacoes-title" tabindex="-1">
+    <h2 id="aplicacoes-title">6) Aplicações práticas</h2>
     <ul class="list"><li>Priorizar a adoração a Deus em todas as áreas da vida.</li><li>Buscar a presença de Jesus diariamente, como prioridade.</li><li>Contribuir com alegria, expressando gratidão a Deus.</li><li>Participar ativamente da comunidade cristã e das células.</li><li>Orar por promoções, fidelidade e surpresas na vida espiritual e profissional.</li><li>Evitar negociar o lugar de Deus na vida com bens materiais ou relacionamentos.</li><li>Incentivar a participação em eventos de vigília e comunhão.</li><li>Refletir sobre a escolha de Maria e a importância de não negociar a presença de Deus.</li></ul>
   </section>
 
       
-  <section class="card section" id="alertas" data-section="alertas">
-    <h2>7) Alertas / pendências</h2>
-    <ul class="list"><li>Referência de Lucas 10 está incompleta, dificultando a compreensão total do contexto.</li><li>Algumas referências bíblicas citadas não foram explicitamente explicadas no estudo.</li><li>A dinâmica de estudo e as atividades interativas precisam de mais detalhes para melhor compreensão.</li></ul>
+  <section class="card section" id="alertas" data-section="alertas" aria-labelledby="alertas-title" tabindex="-1">
+    <h2 id="alertas-title">7) Alertas / pendências</h2>
+    <ul class="list"><li>Referência de Lucas 10 está incompleta, procurar fontes externas.</li></ul>
   </section>
 
       
-  <section class="card section" id="perguntas" data-section="perguntas">
-    <h2>8) Perguntas para revisão</h2>
+  <section class="card section" id="perguntas" data-section="perguntas" aria-labelledby="perguntas-title" tabindex="-1">
+    <h2 id="perguntas-title">8) Perguntas para revisão</h2>
     <ol class="question-list"><li>Qual é a prioridade que o estudo enfatiza na vida do cristão?</li><li>Como a escolha de Maria exemplifica a importância de não negociar a presença de Deus?</li><li>Por que é importante contribuir com alegria?</li><li>Qual é o papel da comunidade cristã na vida do fiel?</li><li>Como a oração por promoções e fidelidade fortalece a fé?</li><li>Qual é a relação entre adoração e entrega total a Deus?</li><li>Por que a participação na vigília é recomendada?</li><li>Como o contexto histórico de Lucas 10 reforça a mensagem do estudo?</li><li>Quais são as consequências de negociar o lugar de Deus na vida?</li><li>Como o estudo incentiva a reflexão e o arrependimento?</li></ol>
   </section>
 
       
-  <section class="card section" id="leituras" data-section="leituras">
-    <h2>Leituras complementares</h2>
+  <section class="card section" id="leituras" data-section="leituras" aria-labelledby="leituras-title" tabindex="-1">
+    <h2 id="leituras-title">Leituras complementares</h2>
     <ul class="list"><li>Salmo 27</li><li>João 4:23-24</li><li>Hebreus 10:19-25</li><li>Tiago 4:8</li><li>Efésios 5:19-20</li></ul>
   </section>
 
       
-  <section class="card section" id="reflexoes" data-section="reflexoes">
-    <h2>Reflexões / ações / oração</h2>
-    <div><h3>Reflexões</h3><ul class="list"><li>A adoração deve ser uma prioridade constante, não uma atividade ocasional.</li><li>Buscar a presença de Jesus diariamente transforma a vida espiritual.</li><li>Contribuir com alegria demonstra gratidão e confiança em Deus.</li><li>Participar da comunidade fortalece a fé e evita a solidão espiritual.</li><li>Orar por promoções e fidelidade é um ato de confiança na intervenção divina.</li><li>Evitar negociar o lugar de Deus com bens materiais ou relacionamentos.</li><li>A participação em eventos de vigília promove comunhão e fortalecimento espiritual.</li><li>Refletir sobre a escolha de Maria ajuda a entender a importância de priorizar Deus.</li></ul></div><div class="hr"></div><div><h3>Ações práticas</h3><ul class="list"><li>Estabelecer um momento diário de busca pela presença de Jesus.</li><li>Participar ativamente de uma célula ou grupo de oração na igreja.</li></ul></div><div class="hr"></div><div><h3>Oração guiada</h3><div class="prose"><p>Senhor, ajuda-nos a colocar a adoração a Ti como prioridade em nossas vidas. Que possamos buscar a Tua presença diariamente, com coração aberto e alegria. Fortalece nossa fé, nos conectando à comunidade e nos guiando em cada passo. Que nunca negociemos o lugar que Tu ocupas em nosso coração. Amém.</p></div></div>
+  <section class="card section" id="reflexoes" data-section="reflexoes" aria-labelledby="reflexoes-title" tabindex="-1">
+    <h2 id="reflexoes-title">Reflexão e prática</h2>
+    <div><h3>Reflexões</h3><ul class="list"><li>A adoração deve ser uma prioridade constante, não uma atividade ocasional.</li><li>Buscar a presença de Jesus diariamente transforma a vida espiritual.</li><li>Contribuir com alegria demonstra gratidão e confiança em Deus.</li><li>Participar da comunidade fortalece a fé e evita a solidão espiritual.</li><li>Orar por promoções e fidelidade é um ato de confiança na intervenção divina.</li><li>Evitar negociar o lugar de Deus com bens materiais ou relacionamentos.</li><li>A participação em eventos de vigília promove comunhão e fortalecimento espiritual.</li><li>Refletir sobre a escolha de Maria ajuda a entender a importância de priorizar Deus.</li></ul></div><div class="hr"></div><div><h3>Ações práticas</h3><ul class="list"><li>Estabelecer um momento diário de busca pela presença de Jesus.</li><li>Participar ativamente de uma célula ou grupo de oração na igreja.</li></ul></div><div class="hr"></div><div><h3>Momento de oração</h3><div class="prose"><p>Senhor, ajuda-nos a colocar a adoração a Ti como prioridade em nossas vidas. Que possamos buscar a Tua presença diariamente, com coração aberto e alegria. Fortalece nossa fé, nos conectando à comunidade e nos guiando em cada passo. Que nunca negociemos o lugar que Tu ocupas em nosso coração. Amém.</p></div></div>
   </section>
     </div>
 
     <button class="back-to-top" type="button" data-back-to-top hidden>Topo</button>
+    </main>
   
-    <div class="footer">Gerado automaticamente • 2026-03-01</div>
+    <footer class="footer">Resumo preparado para leitura, ensino e reflexão • atualizado em 2 de março de 2026</footer>
   </div>
   <script>
 const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
@@ -289,7 +292,12 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const id = entry.target.getAttribute("data-section");
-    sectionLinks.forEach(link => link.classList.toggle("is-active", link.getAttribute("data-section-link") === id));
+    sectionLinks.forEach(link => {
+      const isActive = link.getAttribute("data-section-link") === id;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
   });
 }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
 

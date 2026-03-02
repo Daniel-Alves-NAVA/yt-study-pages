@@ -11,58 +11,61 @@
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
   <div class="page-glow page-glow-a"></div>
   <div class="page-glow page-glow-b"></div>
   <div class="container">
     
     
-  <div class="topbar">
+  <header class="topbar" role="banner">
     <div class="brand">
-      <a href="./index.html" class="brand-link">Reader</a>
+      <a href="./index.html" class="brand-link" aria-label="Ir para a página inicial">Reader</a>
       <span class="badge">Arquivo</span>
     </div>
-    <div class="actions">
+    <nav class="actions" aria-label="Ações da página">
       <a class="btn btn-ghost" href="./index.html">GitHub Pages</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-    <header class="hero hero-index">
+    <main id="main-content" tabindex="-1">
+    <header class="hero hero-index" aria-labelledby="index-title">
       <div class="hero-copy">
         <div class="card-eyebrow">Biblioteca</div>
-        <h1 class="hero-title">Resumos para leitura, revisão e ensino</h1>
+        <h1 class="hero-title" id="index-title">Resumos para leitura, revisão e ensino</h1>
         <p class="hero-subtitle">Coleção de estudos organizados para leitura rápida, navegação por tema e consulta posterior.</p>
         <div class="meta-pills">
-          <span class="pill">Total <strong data-count>5</strong></span>
-          <span class="pill">3 categorias</span>
+          <span class="pill">Total <strong data-count aria-live="polite">6</strong></span>
+          <span class="pill">4 categorias</span>
           <span class="pill">Fonte: summaries_md/</span>
         </div>
       </div>
       <aside class="hero-side hero-side-index">
         <div class="feature-card">
           <div class="card-eyebrow">Destaque</div>
-          <h2>Resumo do Estudo Bíblico – O Poder Transformador da Palavra e da Presença de Deus</h2>
-          <p>21 de fevereiro de 2026</p>
-          <a class="btn" href="./culto-de-jovens-chama-21-02-2026/index.html">Abrir mais recente</a>
+          <h2>Resumo do Estudo Bíblico – A Importância da Presença de Deus e a Ação na Obra</h2>
+          <p>01 de março de 2026</p>
+          <a class="btn" href="./culto-manha-01-03-2026/index.html">Abrir mais recente</a>
         </div>
       </aside>
     </header>
 
-    <section class="card filter-card">
+    <section class="card filter-card" aria-labelledby="filters-title">
+      <h2 id="filters-title" class="sr-only">Filtros da biblioteca</h2>
       <div class="filter-grid">
         <label class="field">
           <span>Buscar</span>
-          <input type="search" placeholder="Título, arquivo, série..." data-search />
+          <input type="search" placeholder="Título, arquivo, série..." data-search aria-label="Buscar por título, arquivo ou série" />
         </label>
         <label class="field">
           <span>Categoria</span>
-          <select data-filter>
+          <select data-filter aria-label="Filtrar por categoria">
             <option value="">Todas</option>
-            <option value="Culto De Jovens">Culto De Jovens</option><option value="Culto Manhã">Culto Manhã</option><option value="Culto Noite">Culto Noite</option>
+            <option value="Culto De Jovens">Culto De Jovens</option><option value="Culto Manhã">Culto Manhã</option><option value="Culto Manhã">Culto Manhã</option><option value="Culto Noite">Culto Noite</option>
           </select>
         </label>
         <label class="field">
           <span>Ordenação</span>
-          <select data-sort>
+          <select data-sort aria-label="Ordenar resultados">
             <option value="date-desc">Mais recentes</option>
             <option value="title-asc">Título A-Z</option>
             <option value="title-desc">Título Z-A</option>
@@ -71,8 +74,31 @@
       </div>
     </section>
 
-    <section class="summary-grid" data-list>
+    <section class="summary-grid" data-list aria-label="Lista de resumos">
       
+    <article
+      class="summary-card"
+      data-item
+      data-title="Resumo do Estudo Bíblico – A Importância da Presença de Deus e a Ação na Obra"
+      data-category="Culto Manhã"
+      data-sort-date="1772323200000"
+      data-search="Culto Manhã 01 de março de 2026 Culto Manhã -  01⧸03⧸2026.md Resumo do Estudo Bíblico – A Importância da Presença de Deus e a Ação na Obra"
+    >
+      <div class="summary-card-top">
+        <div>
+          <div class="card-eyebrow">Culto Manhã</div>
+          <h2>Resumo do Estudo Bíblico – A Importância da Presença de Deus e a Ação na Obra</h2>
+        </div>
+        <span class="date-chip">01 de março de 2026</span>
+      </div>
+      <p class="summary-card-copy">Leitura estruturada do conteúdo em formato de revisão.</p>
+      <div class="summary-card-meta">
+        <span>Culto Manhã -  01⧸03⧸2026.md</span>
+      </div>
+      <div class="summary-card-actions">
+        <a class="btn" href="./culto-manha-01-03-2026/index.html">Abrir leitura</a>
+      </div>
+    </article>
     <article
       class="summary-card"
       data-item
@@ -190,12 +216,13 @@
     </article>
     </section>
 
-    <section class="card empty-state" data-empty hidden>
+    <section class="card empty-state" data-empty hidden aria-live="polite">
       <h2>Nenhum resumo encontrado</h2>
       <p class="muted">Ajuste a busca ou o filtro para encontrar outra leitura.</p>
     </section>
+    </main>
   
-    <div class="footer">Estudo biblico • 2026</div>
+    <footer class="footer">Resumo preparado para leitura, ensino e reflexão</footer>
   </div>
   <script>
 const searchInput = document.querySelector("[data-search]");

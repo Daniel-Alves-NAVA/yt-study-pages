@@ -30,6 +30,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -46,6 +50,15 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+section:focus-visible {
+  outline: 3px solid rgba(255, 184, 77, 0.9);
+  outline-offset: 4px;
 }
 
 button,
@@ -85,6 +98,39 @@ select {
   padding: 24px 18px 88px;
 }
 
+.skip-link,
+.sr-only {
+  position: absolute;
+}
+
+.skip-link {
+  left: 18px;
+  top: 12px;
+  z-index: 50;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: #fff3e9;
+  color: #140d09;
+  font-weight: 800;
+  transform: translateY(-140%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -99,6 +145,11 @@ select {
   background: rgba(20, 14, 10, 0.72);
   backdrop-filter: blur(18px) saturate(150%);
   box-shadow: var(--shadow-md);
+}
+
+.topbar nav {
+  display: flex;
+  align-items: center;
 }
 
 .brand,
@@ -461,6 +512,10 @@ select {
   scroll-margin-top: 96px;
 }
 
+.section:focus-visible {
+  border-color: rgba(255, 184, 77, 0.45);
+}
+
 .section-anchor,
 .section-thesis,
 .section-action {
@@ -486,7 +541,8 @@ select {
 }
 
 .toc-link:hover,
-.toc-link.is-active {
+.toc-link.is-active,
+.toc-link[aria-current="location"] {
   color: var(--text);
   background: linear-gradient(135deg, rgba(255, 122, 26, 0.14), rgba(255, 184, 77, 0.12));
   border-color: rgba(255, 122, 26, 0.18);

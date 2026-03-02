@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const { parseSummaryMarkdown } = require("../src/parse_md.js");
 const { videoPage, indexPage } = require("../src/templates.js");
 
@@ -9,8 +10,35 @@ const OUT_DIR = path.join(ROOT, "docs");
 const ASSETS_DIR = path.join(OUT_DIR, "assets");
 const CSS_SRC = path.join(ROOT, "src", "styles.css");
 const CSS_OUT = path.join(ASSETS_DIR, "styles.css");
+const BUILD_STATE = path.join(ROOT, ".build-state.json");
 
 function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+
+function hashContent(content) {
+  return crypto.createHash("sha256").update(content).digest("hex");
+}
+
+function readBuildState() {
+  try {
+    return JSON.parse(fs.readFileSync(BUILD_STATE, "utf8"));
+  } catch {
+    return { sources: {} };
+  }
+}
+
+function writeBuildState(state) {
+  fs.writeFileSync(BUILD_STATE, JSON.stringify(state, null, 2) + "\n", "utf8");
+}
+
+function formatFooterDate(isoDate) {
+  if (!isoDate) return "";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(new Date(`${isoDate}T00:00:00Z`));
+}
 
 function titleCase(value) {
   return String(value || "")
@@ -92,10 +120,19 @@ function buildOnce() {
 
   const files = fs.readdirSync(IN_DIR).filter(f => f.endsWith(".md"));
   const items = [];
+  const prevState = readBuildState();
+  const nextState = { sources: {} };
 
   for (const file of files) {
     const full = path.join(IN_DIR, file);
     const md = fs.readFileSync(full, "utf8");
+    const contentHash = hashContent(md);
+    const prevEntry = prevState.sources?.[file];
+    const lastUpdated = !prevEntry
+      ? ""
+      : prevEntry.hash === contentHash
+        ? prevEntry.lastUpdated || ""
+        : new Date().toISOString().slice(0, 10);
 
     let data;
     try {
@@ -109,7 +146,12 @@ function buildOnce() {
     const baseName = path.basename(file, ".md");
     const slug = slugify(baseName || data.title);
     const meta = extractMeta(file);
-    data.meta = meta;
+    data.meta = {
+      ...meta,
+      footerText: lastUpdated
+        ? `Resumo preparado para leitura, ensino e reflexão • atualizado em ${formatFooterDate(lastUpdated)}`
+        : "Resumo preparado para leitura, ensino e reflexão"
+    };
 
     const pageDir = path.join(OUT_DIR, slug);
     ensureDir(pageDir);
@@ -118,6 +160,10 @@ function buildOnce() {
     fs.writeFileSync(path.join(pageDir, "index.html"), html, "utf8");
 
     items.push({ slug, title: data.title || slug, file, meta });
+    nextState.sources[file] = {
+      hash: contentHash,
+      lastUpdated
+    };
   }
 
   items.sort((a, b) => {
@@ -128,6 +174,7 @@ function buildOnce() {
 
   const indexHtml = indexPage({ items });
   fs.writeFileSync(path.join(OUT_DIR, "index.html"), indexHtml, "utf8");
+  writeBuildState(nextState);
 
   console.log(`✅ Build OK: ${items.length} páginas em /docs`);
 }

@@ -76,9 +76,7 @@ A adoração a Deus deve ser a prioridade máxima na vida do cristão, sem negoc
 ---
 
 ## 7) Alertas / pendências
-- Referência de Lucas 10 está incompleta, dificultando a compreensão total do contexto.
-- Algumas referências bíblicas citadas não foram explicitamente explicadas no estudo.
-- A dinâmica de estudo e as atividades interativas precisam de mais detalhes para melhor compreensão.
+- Referência de Lucas 10 está incompleta, procurar fontes externas.
 
 ---
 
