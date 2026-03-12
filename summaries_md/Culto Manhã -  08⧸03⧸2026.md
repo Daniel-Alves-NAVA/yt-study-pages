@@ -62,8 +62,10 @@ As tempestades na vida do cristão não são evidência da ausência de Deus, ma
 
 ### Ponto 3
 - Âncora: João 21  
-- Ensino: A restauração de Pedro após a ressurreição de Cristo revela que o discipulado é marcado por dependência contínua da graça de Jesus.  
-- Evidência: O mesmo Pedro que afundou nas águas é restaurado por Cristo e chamado novamente ao ministério, evidenciando que a graça sustenta o discípulo mesmo após suas falhas.
+### Ponto 3
+- Âncora: João 21  
+- Ensino: O episódio de João 21 mostra Pedro lançando-se ao mar para ir ao encontro de Jesus, indicando familiaridade e habilidade com a água. Isso evidencia que Pedro não era alguém incapaz de nadar. Assim, em Mateus 14, o medo de afundar não decorre de falta de habilidade natural, mas da pressão e da intensidade da situação vivida na tempestade.  
+- Evidência: Pedro, que em João 21 se lança ao mar para nadar até Jesus, em Mateus 14 é tomado pelo medo diante do vento e das ondas. Isso revela como circunstâncias extremas podem oprimir o coração humano e abalar momentaneamente a confiança, mesmo em alguém experiente.
 
 ---
 
