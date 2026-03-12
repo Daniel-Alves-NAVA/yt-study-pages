@@ -87,8 +87,7 @@ A palavra de Deus é uma ferramenta poderosa de revelação, autoridade e govern
 ---
 
 ## 7) Alertas / pendências
-- Referências incompletas: Efésios, 2 Coríntios, e outras mencionadas sem detalhes.
-- Temas bíblicos implícitos precisam ser confirmados para maior precisão.
+- Referências incompletas: Efésios, 2 Coríntios, e outras mencionadas sem detalhes, procurar fontes externas para melhor compreensão.
 
 ---
 

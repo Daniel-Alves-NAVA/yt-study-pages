@@ -12,8 +12,6 @@
 - Mateus 9:16-17
 - 2 Coríntios 9:8
 - 1 Samuel 17
-- Tiago (INCOMPLETO)
-- Mateus 5 (INCOMPLETO)
 
 ### CITADAS MAS NÃO EXPLICADAS
 - (nenhuma)

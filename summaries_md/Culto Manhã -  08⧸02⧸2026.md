@@ -89,9 +89,7 @@ A verdadeira expansão na vida do crente depende de obediência, humildade e con
 ---
 
 ## 7) Alertas / pendências
-- Referências incompletas em alguns trechos (ex: Gênesis 26:15, 26:20, 26:25).  
 - Necessidade de aprofundar a relação entre os conflitos de Isaac e a espiritualidade cristã.  
-- Verificar a exatidão de algumas referências citadas como "INCOMPLETO".
 
 ---
 

@@ -25,7 +25,7 @@ function renderMetaPills(meta = {}) {
   return `<div class="meta-pills">${pills.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
 }
 
-function pageShell({ title, content, relativeBase, script = "", footerText = "Resumo preparado para leitura, ensino e reflexão" }) {
+function pageShell({ title, content, relativeBase, script = "" }) {
   return `<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -39,12 +39,11 @@ function pageShell({ title, content, relativeBase, script = "", footerText = "Re
   <link rel="stylesheet" href="${relativeBase}assets/styles.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
   <div class="page-glow page-glow-a"></div>
   <div class="page-glow page-glow-b"></div>
   <div class="container">
     ${content}
-    <footer class="footer">${escapeHtml(footerText)}</footer>
+    <div class="footer">Conteúdo organizado a partir da ministração • ${new Date().toISOString().slice(0, 10)}</div>
   </div>
   ${script ? `<script>${script}</script>` : ""}
 </body>
@@ -53,22 +52,22 @@ function pageShell({ title, content, relativeBase, script = "", footerText = "Re
 
 function topbar({ relativeBase, badge = "Colecao", actionLabel = "Voltar", actionHref = "index.html" }) {
   return `
-  <header class="topbar" role="banner">
+  <div class="topbar">
     <div class="brand">
-      <a href="${relativeBase}index.html" class="brand-link" aria-label="Ir para a página inicial">Reader</a>
+      <a href="${relativeBase}index.html" class="brand-link">Reader</a>
       <span class="badge">${escapeHtml(badge)}</span>
     </div>
-    <nav class="actions" aria-label="Ações da página">
+    <div class="actions">
       <a class="btn btn-ghost" href="${relativeBase}${escapeHtml(actionHref)}">${escapeHtml(actionLabel)}</a>
-    </nav>
-  </header>`;
+    </div>
+  </div>`;
 }
 
 function toc(items) {
   return `
   <nav class="card toc" aria-label="Sumário do resumo">
     <div class="card-eyebrow">Navegação</div>
-    <h2 class="toc-title">Percurso de leitura</h2>
+    <div class="toc-title">Percurso de leitura</div>
     <div class="toc-grid">
       ${items.map(([id, label]) => `<a class="toc-link" href="#${id}" data-section-link="${id}">${escapeHtml(label)}</a>`).join("")}
     </div>
@@ -77,10 +76,9 @@ function toc(items) {
 
 function section({ id, title, bodyHtml, tone = "" }) {
   const toneClass = tone ? ` section-${tone}` : "";
-  const headingId = `${id}-title`;
   return `
-  <section class="card section${toneClass}" id="${escapeHtml(id)}" data-section="${escapeHtml(id)}" aria-labelledby="${escapeHtml(headingId)}" tabindex="-1">
-    <h2 id="${escapeHtml(headingId)}">${escapeHtml(title)}</h2>
+  <section class="card section${toneClass}" id="${escapeHtml(id)}" data-section="${escapeHtml(id)}">
+    <h2>${escapeHtml(title)}</h2>
     ${bodyHtml}
   </section>`;
 }
@@ -90,7 +88,7 @@ function statsBar(data, refs) {
     { label: "Texto-base", value: data.texto_base?.length || 0 },
     { label: "Referências", value: refs.confirmadas?.length || 0 },
     { label: "Aplicações", value: data.aplicacoes?.length || 0 },
-    { label: "Perguntas", value: data.perguntas?.length || 0 }
+    { label: "Alertas", value: data.alertas?.length || 0 }
   ];
 
   return `
@@ -133,12 +131,7 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const id = entry.target.getAttribute("data-section");
-    sectionLinks.forEach(link => {
-      const isActive = link.getAttribute("data-section-link") === id;
-      link.classList.toggle("is-active", isActive);
-      if (isActive) link.setAttribute("aria-current", "location");
-      else link.removeAttribute("aria-current");
-    });
+    sectionLinks.forEach(link => link.classList.toggle("is-active", link.getAttribute("data-section-link") === id));
   });
 }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
 
@@ -212,9 +205,7 @@ function videoPage({ data, slug }) {
     ["panorama", "Panorama histórico"],
     ["aplicacoes", "Aplicações práticas"],
     ["alertas", "Alertas / pendências"],
-    ["perguntas", "Perguntas para revisão"],
-    ["leituras", "Leituras complementares"],
-    ["reflexoes", "Reflexões / ações / oração"]
+    ["leituras", "Leituras complementares"]
   ];
 
   const fluxoHtml = Array.isArray(data.fluxo) && data.fluxo.length
@@ -264,25 +255,14 @@ function videoPage({ data, slug }) {
     `).join("")}</div>`
     : `<p class="muted">—</p>`;
 
-  const perguntasHtml = Array.isArray(data.perguntas) && data.perguntas.length
-    ? `<ol class="question-list">${data.perguntas.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ol>`
-    : `<p class="muted">—</p>`;
-
-  const reflexoesBlock = [
-    data.reflexoes?.length ? `<div><h3>Reflexões</h3>${renderBullets(data.reflexoes)}</div>` : "",
-    data.acoes_praticas?.length ? `<div><h3>Ações práticas</h3>${renderBullets(data.acoes_praticas)}</div>` : "",
-    data.oracao_guiada ? `<div><h3>Momento de oração</h3><div class="prose">${renderParagraph(data.oracao_guiada)}</div></div>` : ""
-  ].filter(Boolean).join(`<div class="hr"></div>`);
-
   const content = `
     <div class="reading-progress"><span data-reading-progress></span></div>
     ${topbar({ relativeBase: "../", badge: meta.category || "Resumo" })}
 
-    <main id="main-content" tabindex="-1">
-    <header class="hero" aria-labelledby="page-title">
+    <header class="hero">
       <div class="hero-copy">
         <div class="card-eyebrow">Resumo de Estudo</div>
-        <h1 class="hero-title" id="page-title">${escapeHtml(title)}</h1>
+        <h1 class="hero-title">${escapeHtml(title)}</h1>
         <p class="hero-subtitle">Leitura estruturada para revisão, ensino e acompanhamento do conteúdo ministrado.</p>
         ${renderMetaPills(meta)}
         ${heroSummary(data)}
@@ -298,7 +278,7 @@ function videoPage({ data, slug }) {
 
     ${toc(tocItems)}
 
-    <div class="stack" aria-label="Seções do resumo">
+    <div class="stack">
       ${section({
         id: "texto-base",
         title: "1) Texto-base",
@@ -312,15 +292,15 @@ function videoPage({ data, slug }) {
         bodyHtml: `
           <div class="refs-grid">
             <div class="mini-card">
-              <div class="mini-label">Referências centrais</div>
+              <div class="mini-label">Confirmadas</div>
               ${renderBullets(refs.confirmadas)}
             </div>
             <div class="mini-card">
-              <div class="mini-label">Referências mencionadas</div>
+              <div class="mini-label">Citadas mas não explicadas</div>
               ${renderBullets(refs.citadas_nao_explicadas)}
             </div>
             <div class="mini-card">
-              <div class="mini-label">Referências contextuais</div>
+              <div class="mini-label">Implícitas</div>
               ${renderBullets(refs.implicitas)}
             </div>
           </div>
@@ -366,35 +346,16 @@ function videoPage({ data, slug }) {
       })}
 
       ${section({
-        id: "perguntas",
-        title: "8) Perguntas para revisão",
-        bodyHtml: perguntasHtml
-      })}
-
-      ${section({
         id: "leituras",
         title: "Leituras complementares",
         bodyHtml: renderBullets(data.leituras_complementares)
       })}
-
-      ${section({
-        id: "reflexoes",
-        title: "Reflexão e prática",
-        bodyHtml: reflexoesBlock || `<p class="muted">—</p>`
-      })}
     </div>
 
     <button class="back-to-top" type="button" data-back-to-top hidden>Topo</button>
-    </main>
   `;
 
-  return pageShell({
-    title,
-    content,
-    relativeBase: "../",
-    script: readingScript(),
-    footerText: meta.footerText
-  });
+  return pageShell({ title, content, relativeBase: "../", script: readingScript() });
 }
 
 function indexPage({ items }) {
@@ -432,14 +393,13 @@ function indexPage({ items }) {
   const content = `
     ${topbar({ relativeBase: "./", badge: "Arquivo", actionLabel: "GitHub Pages", actionHref: "index.html" })}
 
-    <main id="main-content" tabindex="-1">
-    <header class="hero hero-index" aria-labelledby="index-title">
+    <header class="hero hero-index">
       <div class="hero-copy">
         <div class="card-eyebrow">Biblioteca</div>
-        <h1 class="hero-title" id="index-title">Resumos para leitura, revisão e ensino</h1>
+        <h1 class="hero-title">Resumos para leitura, revisão e ensino</h1>
         <p class="hero-subtitle">Coleção de estudos organizados para leitura rápida, navegação por tema e consulta posterior.</p>
         <div class="meta-pills">
-          <span class="pill">Total <strong data-count aria-live="polite">${items.length}</strong></span>
+          <span class="pill">Total <strong data-count>${items.length}</strong></span>
           <span class="pill">${escapeHtml(categories.length)} categorias</span>
           <span class="pill">Fonte: summaries_md/</span>
         </div>
@@ -454,23 +414,22 @@ function indexPage({ items }) {
       </aside>
     </header>
 
-    <section class="card filter-card" aria-labelledby="filters-title">
-      <h2 id="filters-title" class="sr-only">Filtros da biblioteca</h2>
+    <section class="card filter-card">
       <div class="filter-grid">
         <label class="field">
           <span>Buscar</span>
-          <input type="search" placeholder="Título, arquivo, série..." data-search aria-label="Buscar por título, arquivo ou série" />
+          <input type="search" placeholder="Título, arquivo, série..." data-search />
         </label>
         <label class="field">
           <span>Categoria</span>
-          <select data-filter aria-label="Filtrar por categoria">
+          <select data-filter>
             <option value="">Todas</option>
             ${categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")}
           </select>
         </label>
         <label class="field">
           <span>Ordenação</span>
-          <select data-sort aria-label="Ordenar resultados">
+          <select data-sort>
             <option value="date-desc">Mais recentes</option>
             <option value="title-asc">Título A-Z</option>
             <option value="title-desc">Título Z-A</option>
@@ -479,15 +438,14 @@ function indexPage({ items }) {
       </div>
     </section>
 
-    <section class="summary-grid" data-list aria-label="Lista de resumos">
+    <section class="summary-grid" data-list>
       ${cards}
     </section>
 
-    <section class="card empty-state" data-empty hidden aria-live="polite">
+    <section class="card empty-state" data-empty hidden>
       <h2>Nenhum resumo encontrado</h2>
       <p class="muted">Ajuste a busca ou o filtro para encontrar outra leitura.</p>
     </section>
-    </main>
   `;
 
   return pageShell({ title: "Reader - Index", content, relativeBase: "./", script: indexScript() });
